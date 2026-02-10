@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>社内機密ドキュメント閲覧</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>社内機密ドキュメント閲覧</h1>
+
+    <div class="section">
+        <h2>OTP発行</h2>
+        <button id="generateBtn">発行</button>
+        <p id="otpDisplay"></p>
+    </div>
+
+    <div class="section">
+        <h2>OTP入力</h2>
+        <input type="text" id="otpInput" placeholder="6桁のコードを入力">
+        <button id="verifyBtn">確認</button>
+    </div>
+
+    <div id="documentSection" class="hidden">
+        <h2>機密ドキュメント</h2>
+        <p id="secretText"></p>
+    </div>
+
+    <p id="message" class="message"></p>
+
+</div>
+
+<!-- モーダル -->
+<div id="otpModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>ワンタイムパスワード</h2>
+        <p id="modalOtpText"></p>
+        <button id="closeModalBtn">閉じる</button>
+    </div>
+</div>
+
+
+
+<script src="script.js"></script>
+</body>
+</html>

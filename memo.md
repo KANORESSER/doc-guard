@@ -1,0 +1,6 @@
+OTPを入力して認証
+↓
+OTPが合っていたらlocalhost8000/secretのcookieのauthenticatedがtrueにセットされる(5分限定)
+authenticated=trueの状態でlocalhost8000/secretにアクセスしたら指定urlにリダイレクトされる
+
+5分経過したらlocalhost8000/secretにアクセスしてもRedirectResponse(url="/")でルートに戻される

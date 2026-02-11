@@ -1,13 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
 from app.models.otp import OTP
 from app.core.security import generate_otp
-from datetime import datetime
-from fastapi import HTTPException
 from app.schemas.otp import OTPVerifyRequest
-from fastapi import Response
-from fastapi import Cookie
+from datetime import datetime
 
 router = APIRouter()
 
@@ -31,8 +28,13 @@ def create_otp(db: Session = Depends(get_db)):
 
 
 @router.post("/verify")
-def verify_otp(data: OTPVerifyRequest, response: Response, db: Session = Depends(get_db)):
-    otp = db.query(OTP).filter(OTP.code == data.code).first()
+def verify_otp(
+    request: OTPVerifyRequest,
+    response: Response,
+    db: Session = Depends(get_db)
+):
+
+    otp = db.query(OTP).filter(OTP.code == request.code).first()
 
     if not otp:
         raise HTTPException(status_code=400, detail="Invalid OTP")
@@ -46,15 +48,11 @@ def verify_otp(data: OTPVerifyRequest, response: Response, db: Session = Depends
     otp.is_used = True
     db.commit()
 
-    # 👇 認証フラグをCookieに
-    response.set_cookie(key="authenticated", value="true", httponly=True)
+    response.set_cookie(
+        key="authenticated",
+        value="true",
+        max_age=300,
+        httponly=True
+    )
 
-    return {"message": "OTP verified"}
-
-
-@router.get("/document")
-def get_document(authenticated: str = Cookie(default=None)):
-    if authenticated != "true":
-        raise HTTPException(status_code=403, detail="Not authorized")
-
-    return {"secret": "これは機密ドキュメントです"}
+    return {"success": True}
